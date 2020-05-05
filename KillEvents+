@@ -1,0 +1,91 @@
+package me.koba1.killevents;
+
+import org.bukkit.*;
+import org.bukkit.command.Command;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.command.CommandSender;
+
+
+public class Main extends JavaPlugin implements Listener {
+
+    @Override
+    public void onEnable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "A KillEvents plugin betöltve!");
+        getServer().getPluginManager().registerEvents(this, this);
+        saveConfig();
+        saveDefaultConfig();
+    }
+
+    @Override
+    public void onDisable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "A KillEvents plugin leállt!");
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity();
+        Location loc = p.getPlayer().getLocation();
+        if (p.getKiller() instanceof Player) {
+            Player k = p.getKiller();
+            k.getPlayer().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 1);
+            k.getPlayer().playSound(loc, Sound.BLOCK_NOTE_PLING, 1, 1);
+            String pUUID = p.getUniqueId().toString();
+            String kUUID = k.getUniqueId().toString();
+            int kills = getConfig().getInt("Players." + kUUID + ".Kills");
+            int deaths = getConfig().getInt("Players." + pUUID + ".Deaths");
+
+            getConfig().set("Players." + kUUID + ".Kills", kills + 1);
+            getConfig().set("Players." + pUUID + ".Deaths", deaths + 1);
+            saveConfig();
+
+            k.sendMessage(color("&aMegölted őt: " + ChatColor.RED + p.getName()));
+            p.sendMessage(color("&cMegölt téged: " + ChatColor.YELLOW + k.getName()));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + p.getName() + "150");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + k.getName() + "50");
+            e.setDeathMessage(ChatColor.GRAY + p.getName() + ChatColor.GRAY + " meghalt " + k.getName() + " által.");
+            if(k.getPlayer().hasPermission("kill.slime")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 300");
+            }
+
+            if(k.getPlayer().hasPermission("kill.pro")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 150");
+            }
+
+            if(k.getPlayer().hasPermission("kill.default")) {
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 100");
+            }
+        }
+    }
+
+    public String color(String msg) {
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (cmd.getName().equalsIgnoreCase("stats")) {
+            if (sender instanceof Player) {
+                Player p = (Player) sender;
+                Player t = (Player) sender;
+                String uuid = p.getUniqueId().toString();
+
+                sender.sendMessage(ChatColor.AQUA + "+------------------------------------+");
+                sender.sendMessage(ChatColor.BLUE + "Játékosneved: " + ChatColor.GREEN + ((Player) sender).getName() + "§9!");
+                sender.sendMessage(ChatColor.RED + "Életed: " + ((Player) sender).getHealth() / 2);
+                sender.sendMessage(ChatColor.RED + "Kajacsíkod: " + ((Player) sender).getFoodLevel() / 2);
+
+                int kills = getConfig().getInt("Players." + uuid + ".Kills");
+                int deaths = getConfig().getInt("Players." + uuid + ".Deaths");
+                sender.sendMessage("§a§n" + p.getName() + "§r " + ChatColor.YELLOW + kills + "§a öléssel és " + ChatColor.YELLOW + deaths + "§a halállal rendelkezik!");
+                sender.sendMessage(ChatColor.AQUA + "+------------------------------------+");
+            }
+        }
+
+        return false;
+    }
+
+}
