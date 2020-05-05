@@ -49,14 +49,17 @@ public class Main extends JavaPlugin implements Listener {
             e.setDeathMessage(ChatColor.GRAY + p.getName() + ChatColor.GRAY + " meghalt " + k.getName() + " által.");
             if(k.getPlayer().hasPermission("kill.slime")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 300");
+                k.sendMessage(color("&aKaptál &c$300&a-t."));
             }
 
             if(k.getPlayer().hasPermission("kill.pro")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 150");
+                k.sendMessage(color("&aKaptál &c$150&a-t."));
             }
 
             if(k.getPlayer().hasPermission("kill.default")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 100");
+                k.sendMessage(color("&aKaptál &c$100&a-t."));
             }
         }
     }
