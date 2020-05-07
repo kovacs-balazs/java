@@ -1,4 +1,4 @@
-package me.koba1.killevents;
+package me.koba1.killevents115;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.command.CommandSender;
+import java.util.Objects;
 
 
 public class Main extends JavaPlugin implements Listener {
@@ -28,11 +29,11 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player p = e.getEntity();
-        Location loc = p.getPlayer().getLocation();
-        if (p.getKiller() instanceof Player) {
+        Location loc = Objects.requireNonNull(p.getPlayer()).getLocation();
+        if (p.getKiller() != null) {
             Player k = p.getKiller();
-            k.getPlayer().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 1);
-            k.getPlayer().playSound(loc, Sound.BLOCK_NOTE_PLING, 1, 1);
+            Objects.requireNonNull(k.getPlayer()).playEffect(loc, Effect.MOBSPAWNER_FLAMES, 1);
+            k.getPlayer().playSound(loc, Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
             String pUUID = p.getUniqueId().toString();
             String kUUID = k.getUniqueId().toString();
             int kills = getConfig().getInt("Players." + kUUID + ".Kills");
@@ -42,25 +43,26 @@ public class Main extends JavaPlugin implements Listener {
             getConfig().set("Players." + pUUID + ".Deaths", deaths + 1);
             saveConfig();
 
-            k.sendMessage(color("&aMegölted őt: " + ChatColor.RED + p.getName()));
-            p.sendMessage(color("&cMegölt téged: " + ChatColor.YELLOW + k.getName()));
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + p.getName() + "150");
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + k.getName() + "50");
             e.setDeathMessage(ChatColor.GRAY + p.getName() + ChatColor.GRAY + " meghalt " + k.getName() + " által.");
-            if(k.getPlayer().hasPermission("kill.slime")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 300");
-                k.sendMessage(color("&aKaptál &c$300&a-t."));
+
+            int money = 0;
+            if(k.getPlayer().hasPermission("kill.default")) {
+                money = 100;
             }
 
             if(k.getPlayer().hasPermission("kill.pro")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 150");
-                k.sendMessage(color("&aKaptál &c$150&a-t."));
+                money = 200;
             }
 
-            if(k.getPlayer().hasPermission("kill.default")) {
-                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 100");
-                k.sendMessage(color("&aKaptál &c$100&a-t."));
+            if(k.getPlayer().hasPermission("kill.slime")) {
+                money = 300;
             }
+
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " " + money);
+            k.sendMessage(color("&3Megölted őt: " + ChatColor.GREEN + p.getName() + "&3. Kaptál &a$" + money + "&3-t."));
+
+            p.sendMessage(color("&3Megölt téged: " + ChatColor.GREEN + k.getName() + "&3. Veszettél &a$50&3-t."));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + p.getName() + " 50");
         }
     }
 
