@@ -76,30 +76,56 @@ public final class Main extends JavaPlugin implements Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (cmd.getName().equalsIgnoreCase("stats")) {
-            Player p = (Player) sender;
-            Player t = (Player) sender;
-            Player player = (Player) sender;
-            String uuid = t.getUniqueId().toString();
+            if(args.length == 0) {
+                Player p = (Player) sender;
+                Player t = (Player) sender;
+                Player player = (Player) sender;
+                String uuid = t.getUniqueId().toString();
 
-            int kills = getConfig().getInt("Players." + uuid + ".Kills");
-            int deaths = getConfig().getInt("Players." + uuid + ".Deaths");
-            double kills2 = getConfig().getInt("Players." + uuid + ".Kills");
-            double deaths2 = getConfig().getInt("Players." + uuid + ".Deaths");
-            double kdr = kills2 / deaths2;
+                int kills = getConfig().getInt("Players." + uuid + ".Kills");
+                int deaths = getConfig().getInt("Players." + uuid + ".Deaths");
+                double kills2 = getConfig().getInt("Players." + uuid + ".Kills");
+                double deaths2 = getConfig().getInt("Players." + uuid + ".Deaths");
+                double kdr = kills2 / deaths2;
+                if (deaths < 1) {
+                    kdr = 0;
+                }
 
-            String replaced = PlaceholderAPI.setPlaceholders(player, "%vault_eco_balance%");
-            String replaced2 = PlaceholderAPI.setPlaceholders(player, "%server_time_HH:mm:ss%");
-            String replaced3 = PlaceholderAPI.setPlaceholders(player, "%server_time_yyyy.MM.dd%");
+                String replaced = PlaceholderAPI.setPlaceholders(player, "%vault_eco_balance%");
+                String replaced2 = PlaceholderAPI.setPlaceholders(player, "%server_time_HH:mm:ss%");
+                String replaced3 = PlaceholderAPI.setPlaceholders(player, "%server_time_yyyy.MM.dd%");
 
-            sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
-            sender.sendMessage(ChatColor.GRAY + "Életed: " + ChatColor.GREEN + player.getHealth() / 2 + ChatColor.GRAY + " | XP szinted: " + ChatColor.GREEN + player.getLevel());
-            sender.sendMessage("");
-            sender.sendMessage(ChatColor.GRAY + "Idő: " + ChatColor.GREEN + replaced2 + ChatColor.GRAY + " | Dátum: " + ChatColor.GREEN + replaced3);
-            sender.sendMessage("");
-            sender.sendMessage(ChatColor.GRAY + "Pénzed: " + ChatColor.GREEN + "$" + replaced + ChatColor.GRAY + " | KDR: " + ChatColor.GREEN + kdr);
-            sender.sendMessage("");
-            sender.sendMessage(ChatColor.GRAY + "Öléseid száma: " + ChatColor.GREEN + kills + ChatColor.GRAY + " | Halálaid száma: " + ChatColor.GREEN + deaths);
-            sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
+                sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
+                sender.sendMessage(ChatColor.GRAY + "Életed: " + ChatColor.GREEN + player.getHealth() / 2 + ChatColor.GRAY + " | XP szinted: " + ChatColor.GREEN + player.getLevel());
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Idő: " + ChatColor.GREEN + replaced2 + ChatColor.GRAY + " | Dátum: " + ChatColor.GREEN + replaced3);
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Pénzed: " + ChatColor.GREEN + "$" + replaced + ChatColor.GRAY + " | KDR: " + ChatColor.GREEN + kdr);
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Öléseid száma: " + ChatColor.GREEN + kills + ChatColor.GRAY + " | Halálaid száma: " + ChatColor.GREEN + deaths);
+                sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("clear")) {
+                Player t = getServer().getPlayer(args[1]);
+                String uuid = t.getUniqueId().toString();
+
+                getConfig().set("Players." + uuid + ".Kills", 0);
+                getConfig().set("Players." + uuid + ".Deaths", 0);
+                saveConfig();
+                t.sendMessage(ChatColor.GRAY + "Statisztikád törölve lett " + ChatColor.GREEN + sender.getName() + ChatColor.GRAY + " által.");
+                sender.sendMessage(ChatColor.GREEN + t.getName() + " §7nevű játékosnak törölted a statisztikáját!");
+
+                return false;
+            }
+
+            if(args[0].equalsIgnoreCase("reload")) {
+                reloadConfig();
+                sender.sendMessage(ChatColor.AQUA + "Config fájl újratöltve");
+                return false;
+            }
+
         }
 
         return false;
