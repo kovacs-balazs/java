@@ -6,8 +6,10 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.ChatColor;
+import org.bukkit.event.EventHandler;
 
 import java.io.File;
 
@@ -17,7 +19,6 @@ public class Main extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getConsoleSender().sendMessage(ChatColor.GREEN + "A commands plugin betöltött.");
     }
-
 
     public void onDisable() {
         getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "A commands plugin leállt.");
@@ -41,9 +42,10 @@ public class Main extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("fortunecommands")) {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.DARK_GREEN + "§lFortune" + ChatColor.GREEN + "§lCommands");
-                sender.sendMessage(" ");
+                sender.sendMessage("");
                 sender.sendMessage(ChatColor.GRAY + "Plugint készítette: " + ChatColor.GREEN + "koba1");
                 sender.sendMessage(ChatColor.GRAY + "Parancsok:" + ChatColor.GREEN + " /fortunecommands help");
+                sender.sendMessage("");
                 return false;
             }
 
@@ -64,14 +66,17 @@ public class Main extends JavaPlugin implements Listener {
                 }
 
                 if(p.getPlayer().hasPermission("fortunecommands.default")) {
-                    sender.sendMessage(ChatColor.GREEN + "/fc help " + ChatColor.GRAY + "- Parancsok kilistázása");
-                    sender.sendMessage(ChatColor.GREEN + "/discord " + ChatColor.GRAY + "- Discord link megnézése");
-                    sender.sendMessage(ChatColor.GREEN + "/szabalyzat " + ChatColor.GRAY + "- Szabályzat megnézése");
-                    sender.sendMessage(ChatColor.GREEN + "/roleplay " + ChatColor.GRAY + "- Fortune GTA V American RolePlay - Hungarian discord link megnézése");
-                    sender.sendMessage(ChatColor.GREEN + "/stats " + ChatColor.GRAY + "- Statisztikád megnézése");
-                    sender.sendMessage(ChatColor.GREEN + "/csapat " + ChatColor.GRAY + "- Csapattagok megnézése - Parancsot készítette: §aSKYDAZ");
+                    sender.sendMessage(ChatColor.GREEN + "/fc help" + ChatColor.GRAY + " - Parancsok kilistázása");
+                    sender.sendMessage(ChatColor.GREEN + "/discord" + ChatColor.GRAY + " - Discord link megnézése");
+                    sender.sendMessage(ChatColor.GREEN + "/szabalyzat" + ChatColor.GRAY + " - Szabályzat megnézése");
+                    sender.sendMessage(ChatColor.GREEN + "/roleplay" + ChatColor.GRAY + " - Fortune GTA V American RolePlay - Hungarian discord link megnézése");
+                    sender.sendMessage(ChatColor.GREEN + "/stats" + ChatColor.GRAY + " - Statisztikád megnézése");
+                    sender.sendMessage(ChatColor.GREEN + "/csapat" + ChatColor.GRAY + " - Csapattagok megnézése - Parancsot készítette: §aSKYDAZ");
                 }
                 return false;
+            } else {
+                sender.sendMessage("§cNincs ilyen parancs!");
+                sender.sendMessage("§7Parancsokért írd be a §a/fc help §7parancsot!");
             }
         }
 
@@ -92,6 +97,7 @@ public class Main extends JavaPlugin implements Listener {
             if(sender instanceof Player) {
                 sender.sendMessage(ChatColor.GRAY + "Tulajdonosok: " + getConfig().getString("tulajdonosok"));
                 sender.sendMessage(ChatColor.GRAY + "Építészek: " + getConfig().getString("epiteszek"));
+                sender.sendMessage(ChatColor.GRAY + "Fejlesztő: " + getConfig().getString("fejlesztok"));
                 sender.sendMessage("");
                 sender.sendMessage(ChatColor.GRAY + "Parancsot készítette: §aSKYDAZ");
             }
