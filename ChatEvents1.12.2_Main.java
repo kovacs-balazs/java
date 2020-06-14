@@ -31,9 +31,7 @@ public class Main extends JavaPlugin implements Listener {
         if (cmd.getName().equalsIgnoreCase("videobolismertemmeg")) {
             Player p = ((Player) sender);
             if (!getConfig().contains("Players." + p.getName())) {
-                sender.sendMessage("§aVálasztásodat sikeresen rögzítettük!");
                 getConfig().set("Players." + p.getName(), "Videóból");
-                getConfig().set("Jatekos." + p.getName(), "Volt");
                 sender.sendMessage("§aVálasztásodat sikeresen rögzítettük!");
                 saveConfig();
             } else {
@@ -45,7 +43,6 @@ public class Main extends JavaPlugin implements Listener {
             Player p = ((Player) sender);
             if (!getConfig().contains("Players." + p.getName())) {
                 getConfig().set("Players." + p.getName(), "Barátomtól");
-                getConfig().set("Jatekos." + p.getName(), "Volt");
                 sender.sendMessage("§aVálasztásodat sikeresen rögzítettük!");
                 saveConfig();
             } else {
@@ -57,19 +54,17 @@ public class Main extends JavaPlugin implements Listener {
             Player p = ((Player) sender);
             if (!getConfig().contains("Players." + p.getName())) {
                 getConfig().set("Players." + p.getName(), "Hírdetésből");
-                getConfig().set("Jatekos." + p.getName(), "Volt");
                 sender.sendMessage("§aVálasztásodat sikeresen rögzítettük!");
                 saveConfig();
             } else {
                 sender.sendMessage(ChatColor.RED + "Már választottál egyet!");
             }
         }
-        
+
         if (cmd.getName().equalsIgnoreCase("egyebtolismertemmeg")) {
             Player p = ((Player) sender);
             if(!getConfig().contains("Players." + p.getName())) {
                 getConfig().set("Players." + p.getName(), "Egyéb");
-                getConfig().set("Jatekos." + p.getName(), "Volt");
                 sender.sendMessage("§aVálasztásodat sikeresen rögzítettük!");
                 saveConfig();
             } else {
