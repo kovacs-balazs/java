@@ -38,7 +38,7 @@ public class Runnable implements Listener {
             public void run() {
                 Player p = event.getPlayer();
 
-                if (!plugin.getConfig().contains("Jatekos." + p.getName())) {
+                if (!plugin.getConfig().contains("Players." + p.getName())) {
                     p.sendMessage(ChatColor.DARK_AQUA + "Honnan ismerted meg a szervert? §6Válassz!");
                     p.sendMessage(" ");
                     //if(!p.hasPlayedBefore()) {
