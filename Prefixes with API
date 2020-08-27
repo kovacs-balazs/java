@@ -1,0 +1,381 @@
+package prefixes.prefixes;
+
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
+import org.apache.logging.log4j.core.config.builder.api.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public final class Prefixes extends JavaPlugin implements Listener {
+
+    @Override
+    public void onEnable() {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+        }
+        getServer().getConsoleSender().sendMessage("A prefixes plugin elindult!");
+        getServer().getPluginManager().registerEvents(this, this);
+        Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
+        Player p = ((Player) sender);
+
+        //RESET --------------------------
+        TextComponent reset = new TextComponent();
+        reset.setText("§4§lTabprefixed visszaállítása");
+        reset.setColor(ChatColor.GRAY);
+        reset.setBold(true);
+        reset.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/prefixemvisszaallitasa"));
+        reset.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a visszaállításhoz").color(ChatColor.DARK_RED).italic(true).create()));
+
+        //KING --------------------------
+        TextComponent king = new TextComponent();
+        king.setText("King §7| Így nézne ki: §6§lKing§6 " + sender.getName());
+        king.setColor(ChatColor.GOLD);
+        king.setBold(true);
+        king.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/kingprefixetmegveszem"));
+        king.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.GOLD).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".King")) {
+            king.addExtra(" §8[§a✔§8]");
+        } else {
+            king.addExtra(" §8[§c❌§8]");
+        }
+
+        // Queen ------------------------------
+        TextComponent queen = new TextComponent();
+        queen.setText("Queen §7| Így nézne ki: §5§lQueen§5 " + sender.getName());
+        queen.setColor(ChatColor.DARK_PURPLE);
+        queen.setBold(true);
+        queen.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/queenprefixetmegveszem"));
+        queen.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.DARK_PURPLE).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Queen")) {
+            queen.addExtra(" §8[§a✔§8]");
+        } else {
+            queen.addExtra(" §8[§c❌§8]");
+        }
+
+
+        // LEGEND ------------------------------
+        TextComponent legend = new TextComponent();
+        legend.setText("Legend §7| Így nézne ki: §2§lLegend§2 " + sender.getName());
+        legend.setColor(ChatColor.DARK_GREEN);
+        legend.setBold(true);
+        legend.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/legendprefixetmegveszem"));
+        legend.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.DARK_GREEN).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Legend")) {
+            legend.addExtra(" §8[§a✔§8]");
+        } else {
+            legend.addExtra(" §8[§c❌§8]");
+        }
+
+
+        // WARRIOR -------------------------------
+        TextComponent warrior = new TextComponent();
+        warrior.setText("§9§lWarrior §7| Így nézne ki: §9§lWarrior§9 " + sender.getName());
+        warrior.setColor(ChatColor.DARK_GREEN);
+        warrior.setBold(true);
+        warrior.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/warriorprefixetmegveszem"));
+        warrior.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.BLUE).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Pro")) {
+            warrior.addExtra(" §8[§a✔§8]");
+        } else {
+            warrior.addExtra(" §8[§c❌§8]");
+        }
+
+
+
+        // PRO ------------------------------------
+        TextComponent pro = new TextComponent();
+        pro.setText("§3§lPro §7| Így nézne ki: §3§lPro§3 " + sender.getName());
+        pro.setColor(ChatColor.DARK_GREEN);
+        pro.setBold(true);
+        pro.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/proprefixetmegveszem"));
+        pro.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.DARK_AQUA).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Pro")) {
+            pro.addExtra(" §8[§a✔§8]");
+        } else {
+            pro.addExtra(" §8[§c❌§8]");
+        }
+
+        // ICE ------------------------------------
+        TextComponent ice = new TextComponent();
+        ice.setText("§b§lIce §7| Így nézne ki: §b§lIce§b " + sender.getName());
+        ice.setColor(ChatColor.DARK_GREEN);
+        ice.setBold(true);
+        ice.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/iceprefixetmegveszem"));
+        ice.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.AQUA).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Ice")) {
+            ice.addExtra(" §8[§a✔§8]");
+        } else {
+            ice.addExtra(" §8[§c❌§8]");
+        }
+
+        // cool ------------------------------------
+        TextComponent cool = new TextComponent();
+        cool.setText("§e§lCool §7| Így nézne ki: §e§lCool§e " + sender.getName());
+        cool.setColor(ChatColor.DARK_GREEN);
+        cool.setBold(true);
+        cool.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/coolprefixetmegveszem"));
+        cool.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.YELLOW).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Cool")) {
+            cool.addExtra(" §8[§a✔§8]");
+        } else {
+            cool.addExtra(" §8[§c❌§8]");
+        }
+
+
+        // HERO ------------------------------------
+        TextComponent hero = new TextComponent();
+        hero.setText("§7§lHero §7| Így nézne ki: §7§lHero§7 " + sender.getName());
+        hero.setColor(ChatColor.DARK_GREEN);
+        hero.setBold(true);
+        hero.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/heroprefixetmegveszem"));
+        hero.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.GRAY).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Hero")) {
+            hero.addExtra(" §8[§a✔§8]");
+        } else {
+            hero.addExtra(" §8[§c❌§8]");
+        }
+
+        // MASTER ------------------------------------
+        TextComponent master = new TextComponent();
+        master.setText("§d§lMaster §7| Így nézne ki: §d§lMaster§d " + sender.getName());
+        master.setColor(ChatColor.DARK_GREEN);
+        master.setBold(true);
+        master.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/masterprefixetmegveszem"));
+        master.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("Kattints ide a megvételhez\nvagy a beállításhoz").color(ChatColor.LIGHT_PURPLE).italic(true).create()));
+        if(getConfig().contains("Players." + sender.getName() + ".Master")) {
+            master.addExtra(" §8[§a✔§8]");
+        } else {
+            master.addExtra(" §8[§c❌§8]");
+        }
+
+        if (cmd.getName().equalsIgnoreCase("prefix")) {
+            sender.sendMessage("§7Az összes prefix §c$2000§7-ba kerül.");
+            sender.sendMessage("");
+            sender.sendMessage(king);
+            //sender.sendMessage("");
+            sender.sendMessage(queen);
+            //sender.sendMessage("");
+            sender.sendMessage(legend);
+            //sender.sendMessage("");
+            sender.sendMessage(warrior);
+            //sender.sendMessage("");
+            sender.sendMessage(pro);
+            //sender.sendMessage("");
+            sender.sendMessage(ice);
+            //sender.sendMessage("");
+            sender.sendMessage(cool);
+            //sender.sendMessage("");
+            sender.sendMessage(hero);
+            //sender.sendMessage("");
+            sender.sendMessage(master);
+            sender.sendMessage("");
+            sender.sendMessage(reset);
+        }
+
+        String balance = PlaceholderAPI.setPlaceholders(p.getPlayer(), "%vault_eco_balance_fixed%");
+        int balance6 = Integer.parseInt(balance);
+
+        // Ha nem configgal jegyez meg dolgokat, akkor intes moneyos cuccal meg lehet oldani!
+        if (cmd.getName().equalsIgnoreCase("kingprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".King")) {
+                    getConfig().set("Players." + sender.getName() + ".King", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &6&lKing &6");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &6&lKing &6");
+                    sender.sendMessage("§7Megvetted a §6§lKing §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &6&lKing &6");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &6&lKing &6");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("queenprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Queen")) {
+                    getConfig().set("Players." + sender.getName() + ".Queen", 1);
+                    saveConfig();
+
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &5&lQueen &5");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &5&lQueen &5");
+                    sender.sendMessage("§7Megvetted a §5§lQueen §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &5&lQueen &5");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &5&lQueen &5");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("legendprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Legend")) {
+                    getConfig().set("Players." + sender.getName() + ".Legend", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &2&lLegend &2");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &2&lLegend &2");
+                    sender.sendMessage("§7Megvetted a §2§lLegend §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &2&lLegend &2");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &2&lLegend &2");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("warriorprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Warrior")) {
+                    getConfig().set("Players." + sender.getName() + ".Warrior", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &9&lWarrior &9");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &9&lWarrior &9");
+                    sender.sendMessage("§7Megvetted a §9§lWarrior §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &9&lWarrior &9");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &9&lWarrior &9");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("proprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Pro")) {
+                    getConfig().set("Players." + sender.getName() + ".Pro", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &3&lPro &3");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &3&lPro &3");
+                    sender.sendMessage("§7Megvetted a §3§lPro §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &3&lPro &3");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &3&lPro &3");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("iceprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Ice")) {
+                    getConfig().set("Players." + sender.getName() + ".Ice", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &b&lIce &b");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &b&lIce &b");
+                    sender.sendMessage("§7Megvetted a §b§lIce §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &b&lIce &b");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &b&lIce &b");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("coolprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Cool")) {
+                    getConfig().set("Players." + sender.getName() + ".Cool", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &e&lCool &e");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &e&lCool &e");
+                    sender.sendMessage("§7Megvetted a §e§lCool §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &e&lCool &e");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &e&lCool &e");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("heroprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Hero")) {
+                    getConfig().set("Players." + sender.getName() + ".Hero", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &7&lHero &7");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &7&lHero &7");
+                    sender.sendMessage("§7Megvetted a §7§lHero §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &7&lHero &7");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &7&lHero &7");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("masterprefixetmegveszem")) {
+            if (balance6 >= 2000) {
+                if (!getConfig().contains("Players." + sender.getName() + ".Master")) {
+                    getConfig().set("Players." + sender.getName() + ".Master", 1);
+                    saveConfig();
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + sender.getName() + " 2000");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &d&lMaster &d");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &d&lMaster &d");
+                    sender.sendMessage("§7Megvetted a §d§lMaster §7előtagot");
+                } else {
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix &d&lMaster &d");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix &d&lMaster &d");
+                    sender.sendMessage("§aElőtag sikeresen beállítva!");
+                    sender.sendMessage("§cEzt már megvetted, ezért már nem von le pénzt!");
+                }
+            } else {
+                sender.sendMessage("§cSzükséged van $2000-ra");
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("prefixemvisszaallitasa")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tabprefix");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "tab player " + sender.getName() + " tagprefix");
+            sender.sendMessage("§cVisszaállítottad a prefixedet.");
+        }
+        return false;
+    }
+}
