@@ -1,0 +1,251 @@
+package me.koba1.killevents1122;
+
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.koba1.killevents1122.Main;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import me.koba1.killevents1122.Main;
+
+import java.util.Arrays;
+
+public final class Main extends JavaPlugin implements Listener {
+
+    @Override
+    public void onEnable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.AQUA + "A KillEvents plugin betöltve!");
+        getServer().getPluginManager().registerEvents(this, this);
+        saveConfig();
+        saveDefaultConfig();
+    }
+
+    @Override
+    public void onDisable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.LIGHT_PURPLE + "A KillEvents plugin leállt!");
+    }
+
+    public String color(String msg) {
+        return ChatColor.translateAlternateColorCodes('&', msg);
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity();
+        Location loc = p.getPlayer().getLocation();
+        if (p.getKiller() != null) {
+            Player k = p.getKiller();
+            k.getPlayer().playEffect(loc, Effect.MOBSPAWNER_FLAMES, 1);
+            k.getPlayer().playSound(loc, Sound.BLOCK_NOTE_PLING, 1, 1);
+            String pUUID = p.getUniqueId().toString();
+            String kUUID = k.getUniqueId().toString();
+            int kills = getConfig().getInt("Players." + kUUID + ".Kills");
+            int deaths = getConfig().getInt("Players." + pUUID + ".Deaths");
+
+            getConfig().set("Players." + kUUID + ".Kills", kills + 1);
+            getConfig().set("Players." + pUUID + ".Deaths", deaths + 1);
+            saveConfig();
+
+            /*k.sendMessage(color("&aMegölted őt: " + ChatColor.RED + p.getName()));
+            p.sendMessage(color("&cMegölt téged: " + ChatColor.YELLOW + k.getName()));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + p.getName() + "150");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + k.getName() + "50");*/
+
+            e.setDeathMessage(ChatColor.GRAY + p.getName() + ChatColor.GRAY + " meghalt " + k.getName() + " által.");
+
+            String balance = PlaceholderAPI.setPlaceholders(p.getPlayer(), "%vault_eco_balance_fixed%");
+
+            int balance6 = Integer.parseInt(balance);
+
+            //if (balance6 >= 50) {
+            if (p.getAddress().getAddress().getHostAddress().equals(k.getAddress().getAddress().getHostAddress())) {
+                p.getPlayer().sendMessage("§cNe farmolj saját karakteren.");
+                k.getPlayer().sendMessage("§cNe farmolj saját karakteren.");
+
+            } else {
+                p.sendMessage(color("&3Megölt téged: " + ChatColor.GREEN + k.getName() + "&3. Veszettél &a$50&3-t."));
+                k.sendMessage(color("&3Megölted őt: " + ChatColor.GREEN + p.getName() + "&3. Kaptál &a$150&3-t."));
+
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + p.getName() + " 50");
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " 150");
+            }
+
+            /*Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco give " + k.getName() + " " + money);
+            k.sendMessage(color("&3Megölted őt: " + ChatColor.GREEN + p.getName() + "&3. Kaptál &a$" + money + "&3-t."));
+
+            p.sendMessage(color("&3Megölt téged: " + ChatColor.GREEN + k.getName() + "&3. Veszettél &a$50&3-t."));
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "eco take " + p.getName() + " 50");*/
+        }
+
+        ItemStack bot = new ItemStack(Material.GOLDEN_CARROT);
+        ItemMeta meta = bot.getItemMeta();
+        bot.setItemMeta(meta);
+
+        Inventory i = e.getEntity().getInventory();
+        for (ItemStack inven : i.getContents()) {
+            if (inven == null) continue; {
+                if (inven.getType().equals(Material.GOLDEN_CARROT)) {
+                    //e.getPlayer().getInventory().removeItem(new ItemStack(Material.GOLDEN_CARROT, 1));
+                    inven.setAmount(inven.getAmount() - 1);
+                    e.getDrops().clear();
+                    e.setKeepInventory(true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player p = (Player) sender;
+        if (cmd.getName().equalsIgnoreCase("saverod")) {
+            if(p.hasPermission("saverod")) {
+                ItemStack bot = new ItemStack(Material.GOLDEN_CARROT);
+                ItemMeta meta = bot.getItemMeta();
+                meta.setDisplayName("§c§kGoldenCarrot");
+                bot.setItemMeta(meta);
+                p.getInventory().addItem(bot);
+            }
+        }
+
+        if (cmd.getName().equalsIgnoreCase("stats")) {
+            if (args.length == 0) {
+                Player t = (Player) sender;
+                Player player = (Player) sender;
+                String uuid = t.getUniqueId().toString();
+
+                int kills = getConfig().getInt("Players." + uuid + ".Kills");
+                int deaths = getConfig().getInt("Players." + uuid + ".Deaths");
+                double kills2 = getConfig().getInt("Players." + uuid + ".Kills");
+                double deaths2 = getConfig().getInt("Players." + uuid + ".Deaths");
+                double kdr = kills2 / deaths2;
+                if (deaths < 1) {
+                    kdr = 0;
+                }
+
+                String replaced = PlaceholderAPI.setPlaceholders(player, "%vault_eco_balance%");
+                String replaced2 = PlaceholderAPI.setPlaceholders(player, "%server_time_HH:mm:ss%");
+                String replaced3 = PlaceholderAPI.setPlaceholders(player, "%server_time_yyyy.MM.dd%");
+                String replaced4 = PlaceholderAPI.setPlaceholders(player, "%playerpoints_points%");
+
+                sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
+                sender.sendMessage(ChatColor.GRAY + "Pontjaid száma: " + ChatColor.GREEN + replaced4 + ChatColor.GRAY + " | XP szinted: " + ChatColor.GREEN + player.getLevel());
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Idő: " + ChatColor.GREEN + replaced2 + ChatColor.GRAY + " | Dátum: " + ChatColor.GREEN + replaced3);
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Pénzed: " + ChatColor.GREEN + "$" + replaced + ChatColor.GRAY + " | KDR: " + ChatColor.GREEN + kdr);
+                sender.sendMessage("");
+                sender.sendMessage(ChatColor.GRAY + "Öléseid száma: " + ChatColor.GREEN + kills + ChatColor.GRAY + " | Halálaid száma: " + ChatColor.GREEN + deaths);
+                sender.sendMessage(ChatColor.YELLOW + "+------------------------------------+");
+                return false;
+            }
+
+            if (args[0].equalsIgnoreCase("clear")) {
+                if (p.getPlayer().hasPermission("stats.clear")) {
+                    Player t = getServer().getPlayer(args[1]);
+                    String uuid = t.getUniqueId().toString();
+
+                    getConfig().set("Players." + uuid + ".Kills", 0);
+                    getConfig().set("Players." + uuid + ".Deaths", 0);
+                    saveConfig();
+                    t.sendMessage(ChatColor.GRAY + "Statisztikád törölve lett " + ChatColor.GREEN + sender.getName() + ChatColor.GRAY + " által.");
+                    sender.sendMessage(ChatColor.GREEN + t.getName() + " §7nevű játékosnak törölted a statisztikáját!");
+                    return false;
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Ehhez nincs jogod!!");
+                }
+            }
+
+            if (args[0].equalsIgnoreCase("reload")) {
+                if (p.getPlayer().hasPermission("stats.reload")) {
+                    reloadConfig();
+                    sender.sendMessage(ChatColor.AQUA + "Config fájl újratöltve");
+                    return false;
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Ehhez nincs jogod!!");
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /*@EventHandler
+    public void onJoins(PlayerJoinEvent e) {
+        Player a = e.getPlayer();
+        String replaced4 = PlaceholderAPI.setPlaceholders(a, "%luckperms_has_permission_join.default%");
+        if (replaced4.equals("no")) {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + a.getName() + " parent set new");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + a.getName() + " permission set join.default");
+        } else {
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + a.getName() + "parent set default");
+        }
+    }*/
+
+    /*@EventHandler
+    public void onVoidTouch(EntityDamageEvent e) {
+        if (e.getEntity() instanceof Player) {
+            Player player = ((Player) e.getEntity()).getPlayer();
+            player.sendMessage("7777778777");
+            double y = e.getEntity().getLocation().getY();
+            String replaced5 = PlaceholderAPI.setPlaceholders(player, "%deluxecombat_in_combat%");
+            if(y < 2) {
+                player.sendMessage("99999999");
+            }
+            if (e.getCause() == EntityDamageEvent.DamageCause.VOID) {
+                player.sendMessage("22222222222222");
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    String msg = "§7 " + p.getName() + " kiesett a világból";
+                    //p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(msg));
+                }
+            }
+
+            if(replaced5.equalsIgnoreCase("null")) {
+                ((Player) e.getEntity()).getInventory().clear();
+                ((Player) e.getEntity()).updateInventory();
+                player.sendMessage("asdasdasdasdas");
+            }
+        }
+    }*/
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent e) {
+
+        ItemStack bot2 = new ItemStack(Material.GOLDEN_CARROT);
+        ItemMeta meta = bot2.getItemMeta();
+        bot2.setItemMeta(meta);
+
+        double y = e.getPlayer().getLocation().getY();
+        String replaced5 = PlaceholderAPI.setPlaceholders(e.getPlayer().getPlayer(), "%pvpmanager_in_combat%");
+        if (replaced5.equals("yes")) {
+            if (y <= 3) {
+                if (e.getPlayer().getInventory().contains(Material.GOLDEN_CARROT)) {
+                    Inventory i = e.getPlayer().getInventory();
+                    for (ItemStack inven : i.getContents()) {
+                        if(inven == null) continue; {
+                            if(inven.getType().equals(Material.GOLDEN_CARROT)) {
+                                //e.getPlayer().getInventory().removeItem(new ItemStack(Material.GOLDEN_CARROT, 1));
+                                inven.setAmount(inven.getAmount() - 1);
+                            }
+                        }
+                    }
+                } else {
+                    e.getPlayer().getInventory().clear();
+                }
+            }
+        }
+    }
+}
