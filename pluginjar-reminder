@@ -1,0 +1,99 @@
+package me.koba1.viaremindern;
+
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Arrays;
+import java.util.Random;
+
+public final class Viaremindern extends JavaPlugin implements Listener {
+
+    @Override
+    public void onEnable() {
+        // Plugin startup logic
+        getServer().getConsoleSender().sendMessage("A Viareminder elindult!");
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvents(this, this);
+        autobroadcast();
+    }
+
+    public void autobroadcast() {
+        final String[] message = {
+                ChatColor.GOLD + "A §eViaBackwards.jar §6fájl nincsen bent a §eplugins §6mappában!",
+        };
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            @Override
+            public void run() {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if(p.isOp()) {
+                        String replaced = PlaceholderAPI.setPlaceholders(p.getPlayer(), "%plugin_exists_viabackwards%");
+                        if(replaced.equals("false")) {
+                            Bukkit.broadcastMessage(Arrays.asList(message).get(new Random().nextInt(message.length)));
+                        }
+                    }
+                }
+            }
+        }, 0 ,1200);
+    }
+
+    @Override
+    public void onDisable() {
+        // Plugin shutdown logic
+        getServer().getConsoleSender().sendMessage("A Viareminder leállt!");
+    }
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if(cmd.getName().equalsIgnoreCase("bolt")) {
+            if(sender instanceof Player) {
+                ((Player) sender).performCommand("cc open bolt");
+            }
+        }
+
+        if(cmd.getName().equalsIgnoreCase("menu")) {
+            if(sender instanceof Player) {
+                ((Player) sender).performCommand("cc open menu");
+            }
+        }
+
+        if(cmd.getName().equalsIgnoreCase("pontbolt")) {
+            if(sender instanceof Player) {
+                ((Player) sender).performCommand("cc open pontbolt");
+            }
+        }
+
+        if(cmd.getName().equalsIgnoreCase("rang")) {
+            if(sender instanceof Player) {
+                ((Player) sender).performCommand("cc open rang");
+            }
+        }
+        return false;
+    }
+
+    @EventHandler
+    public void onJoin(PlayerLoginEvent e) {
+        Player p = e.getPlayer();
+        double x = p.getLocation().getX();
+        double y = p.getLocation().getY();
+        double z = p.getLocation().getZ();
+
+        World skypvp = Bukkit.getServer().getWorld("SkyPvP");
+        Location skypvp2 = new Location(skypvp, -21, 141, -14);
+        p.teleport(skypvp2);
+    }
+}
