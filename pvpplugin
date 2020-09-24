@@ -1,0 +1,458 @@
+package me.koba1.RicsiPvP;
+
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.minecraft.server.v1_8_R3.Entity;
+import net.minecraft.server.v1_8_R3.PlayerInventory;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.awt.*;
+import java.lang.*;
+
+import java.util.concurrent.TimeUnit;
+
+public class Main extends JavaPlugin implements Listener {
+
+    //private Main m = Main.getPlugin(Main.class);
+
+    @Override
+    public void onEnable() {
+        getServer().getConsoleSender().sendMessage(ChatColor.RED + "A plugin betöltött!");
+        getServer().getPluginManager().registerEvents(this, this);
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent e) {
+        Player p = e.getEntity();
+        Player k = p.getKiller();
+        e.getDrops().clear();
+        e.setDeathMessage(ChatColor.YELLOW + p.getName() + ChatColor.GOLD + " meghalt " + ChatColor.YELLOW + k.getName() + ChatColor.GOLD + " keze által.");
+
+        int kills = getConfig().getInt("Players." + k.getName() + ".Kills");
+        getConfig().set("Players." + k.getName() + ".Kills", kills + 1);
+        saveConfig();
+
+        double x2 = k.getLocation().getX();
+        double y2 = k.getLocation().getY();
+        double z2 = k.getLocation().getZ();
+
+        World world = Bukkit.getServer().getWorld("world");
+
+        Location balurespawn = new Location(world, -11.5, 90, 253.5, 180, 0);
+        Location ricsirespawn = new Location(world, -11.5, 90, 231.5, 0, 0);
+
+        String ricsi = "lv_NightWolf_vl";
+        String balu = "kbalu";
+
+        if (k.getName().equals(balu)) {
+            k.teleport(ricsirespawn);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -11 90 231 -11 90 231 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 90 232 -12 90 232 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -13 90 231 -13 90 231 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 90 230 -12 90 230 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 92 231 -12 92 231 barrier");
+
+        }
+
+        else if (k.getName().equals(ricsi)) {
+            k.teleport(ricsirespawn);
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -11 90 231 -11 90 231 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 90 232 -12 90 232 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -13 90 231 -13 90 231 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 90 230 -12 90 230 barrier");
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -12 92 231 -12 92 231 barrier");
+        }
+
+        p.getInventory().clear();
+        k.getInventory().clear();
+
+        p.getInventory().setHelmet(null);
+        p.getInventory().setChestplate(null);
+        p.getInventory().setLeggings(null);
+        p.getInventory().setBoots(null);
+
+        k.getInventory().setHelmet(null);
+        k.getInventory().setChestplate(null);
+        k.getInventory().setLeggings(null);
+        k.getInventory().setBoots(null);
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent e) {
+        Player p = e.getPlayer();
+        Location loc = p.getPlayer().getLocation();
+        if (p.getKiller() != null) {
+            Player k = p.getKiller();
+            //p.spigot().respawn();
+            //e.setDeathMessage(ChatColor.YELLOW + p.getName() + ChatColor.GOLD + " meghalt " + ChatColor.YELLOW + k.getName() + ChatColor.GOLD + " keze által.");
+            //p.sendTitle("§4YOU DIED", "§4Meghaltál");
+
+            //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "fill -117 91 197 -82 104 234 air 0 replace wool 14");
+
+            //p.getInventory().clear();
+            //k.getInventory().clear();
+
+            ItemStack[] standard = new ItemStack[4];
+            standard[0] = new ItemStack(Material.LEATHER_BOOTS);
+            standard[1] = new ItemStack(Material.LEATHER_LEGGINGS);
+            standard[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+            standard[3] = new ItemStack(Material.LEATHER_HELMET);
+
+            ItemStack[] standard2 = new ItemStack[4];
+            standard2[0] = new ItemStack(Material.LEATHER_HELMET);
+            standard2[1] = new ItemStack(Material.LEATHER_LEGGINGS);
+            standard2[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+            standard2[3] = new ItemStack(Material.LEATHER_HELMET);
+
+            ItemStack[] standard3 = new ItemStack[4];
+            standard3[0] = new ItemStack(Material.IRON_BOOTS);
+            standard3[1] = new ItemStack(Material.IRON_LEGGINGS);
+            standard3[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+            standard3[3] = new ItemStack(Material.LEATHER_HELMET);
+
+            ItemStack[] upgraded = new ItemStack[2];
+            upgraded[0] = new ItemStack(Material.LEATHER_CHESTPLATE);
+            upgraded[1] = new ItemStack(Material.LEATHER_HELMET);
+
+            ItemStack sharpfakard = new ItemStack(Material.WOOD_SWORD, 1);
+            sharpfakard.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+            ItemStack sharpstonekard = new ItemStack(Material.STONE_SWORD, 1);
+            sharpstonekard.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+
+            ItemStack protironboots = new ItemStack(Material.IRON_BOOTS, 1);
+            protironboots.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+
+            ItemStack protironleggings = new ItemStack(Material.IRON_LEGGINGS, 1);
+            protironleggings.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 1);
+
+            ItemStack leatherhelmet = new ItemStack(Material.LEATHER_HELMET, 1);
+            ItemStack leatherchestplate = new ItemStack(Material.LEATHER_CHESTPLATE, 1);
+
+            if (k.getName().equals("lv_NightWolf_vl")) {
+                if (getConfig().getString("Kit." + ".Kit").equals("Standard")) {
+                    p.getEquipment().setArmorContents(standard);
+                    k.getEquipment().setArmorContents(standard);
+                    k.performCommand("heal");
+                    p.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+
+                    k.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Standard2")) {
+                    p.getEquipment().setArmorContents(standard2);
+                    k.getEquipment().setArmorContents(standard2);
+                    k.performCommand("heal");
+                    p.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, sharpfakard);
+
+                    k.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, sharpfakard);
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Standard3")) {
+                    p.getEquipment().setArmorContents(standard3);
+                    k.getEquipment().setArmorContents(standard3);
+                    k.performCommand("heal");
+                    p.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, sharpfakard);
+
+                    k.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, sharpfakard);
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Upgraded")) {
+                    p.getEquipment().setArmorContents(upgraded);
+                    k.getEquipment().setArmorContents(upgraded);
+
+                    p.getEquipment().setHelmet(leatherhelmet);
+                    p.getEquipment().setChestplate(leatherchestplate);
+                    k.getEquipment().setHelmet(leatherhelmet);
+                    k.getEquipment().setChestplate(leatherchestplate);
+
+                    p.getEquipment().setBoots(protironboots);
+                    p.getEquipment().setLeggings(protironleggings);
+
+                    k.getEquipment().setBoots(protironboots);
+                    k.getEquipment().setLeggings(protironleggings);
+
+                    k.performCommand("heal");
+                    p.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, sharpstonekard);
+
+                    k.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, sharpstonekard);
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "k
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit upgraded " + p.getName());
+                }
+            } else if (k.getName().equals("kbalu")) {
+
+                if (getConfig().getString("Kit." + ".Kit").equals("Standard")) {
+                    p.getEquipment().setArmorContents(standard);
+                    k.getEquipment().setArmorContents(standard);
+
+                    k.performCommand("heal");
+
+                    k.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+
+                    p.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, new ItemStack(Material.WOOD_SWORD, 1));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Standard2")) {
+                    p.getEquipment().setArmorContents(standard2);
+                    k.getEquipment().setArmorContents(standard2);
+
+                    k.performCommand("heal");
+
+                    k.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, new ItemStack(sharpfakard));
+
+                    p.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, new ItemStack(sharpfakard));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Standard3")) {
+                    p.getEquipment().setArmorContents(standard3);
+                    k.getEquipment().setArmorContents(standard3);
+
+                    k.performCommand("heal");
+
+                    k.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, new ItemStack(sharpfakard));
+
+                    p.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, new ItemStack(sharpfakard));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit standard");
+                } else if (getConfig().getString("Kit." + ".Kit").equals("Upgraded")) {
+                    p.getEquipment().setArmorContents(upgraded);
+                    k.getEquipment().setArmorContents(upgraded);
+
+                    p.getEquipment().setHelmet(leatherhelmet);
+                    p.getEquipment().setChestplate(leatherchestplate);
+                    k.getEquipment().setHelmet(leatherhelmet);
+                    k.getEquipment().setChestplate(leatherchestplate);
+
+                    p.getEquipment().setBoots(protironboots);
+                    p.getEquipment().setLeggings(protironleggings);
+
+                    k.getEquipment().setBoots(protironboots);
+                    k.getEquipment().setLeggings(protironleggings);
+
+                    k.performCommand("heal");
+
+                    k.getInventory().setItem(2, new ItemStack(Material.WOOL, 64));
+                    k.getInventory().setItem(0, new ItemStack(sharpstonekard));
+
+                    p.getInventory().setItem(getConfig().getInt("Ricsi." + "lv_NightWolf_vl" + ".Slot"), new ItemStack(Material.WOOL, 64));
+                    p.getInventory().setItem(0, new ItemStack(sharpstonekard));
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "k
+                    //Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "kit upgraded " + p.getName());
+                }
+            }
+        }
+
+        /*String ricsi = "lv_NightWolf_vl";
+        String balu = "kbalu";
+
+        Player k = p.getKiller();
+        double x = p.getLocation().getX();
+        double y = p.getLocation().getY();
+        double z = p.getLocation().getZ();
+
+        double x2 = k.getLocation().getX();
+        double y2 = k.getLocation().getY();
+        double z2 = k.getLocation().getZ();
+
+        World world = Bukkit.getServer().getWorld("world");
+
+        Location balurespawn = new Location(world, -11.5, 90, 253.5, 180, 0);
+        Location ricsirespawn = new Location(world, -11.5, 90, 231.5, 0, 0);
+
+        if (k.getName().equals(balu)) {
+            k.teleport(balurespawn);
+            k.performCommand("fill -28 112 228 4 90 256 air");
+            p.teleport(ricsirespawn);
+        }
+
+        else if (k.getName().equals(ricsi)) {
+            k.teleport(ricsirespawn);
+            k.performCommand("fill -28 112 228 4 90 256 air");
+            p.teleport(balurespawn);
+        }*/
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                String ricsi = "lv_NightWolf_vl";
+                String balu = "kbalu";
+
+                double x = p.getLocation().getX();
+                double y = p.getLocation().getY();
+                double z = p.getLocation().getZ();
+
+                World world = Bukkit.getServer().getWorld("world");
+
+                Location balurespawn = new Location(world, -11.5, 90, 253.5, 180, 0);
+                Location ricsirespawn = new Location(world, -11.5, 90, 231.5, 0, 0);
+                p.teleport(balurespawn);
+                p.performCommand("fill -28 112 228 4 90 256 air");
+            }
+        }.runTaskLater(Main.getPlugin(Main.class), 5);
+    }
+
+    //private Main m = Main.getPlugin(Main.class);
+
+    @Override
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        Player p = ((Player) sender);
+        ItemStack[] standard = new ItemStack[4];
+        standard[0] = new ItemStack(Material.LEATHER_HELMET);
+        standard[1] = new ItemStack(Material.LEATHER_LEGGINGS);
+        standard[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+        standard[3] = new ItemStack(Material.LEATHER_HELMET);
+
+        ItemStack[] standard2 = new ItemStack[4];
+        standard2[0] = new ItemStack(Material.LEATHER_HELMET);
+        standard2[1] = new ItemStack(Material.LEATHER_LEGGINGS);
+        standard2[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+        standard2[3] = new ItemStack(Material.LEATHER_HELMET);
+
+        ItemStack[] standard3 = new ItemStack[4];
+        standard3[0] = new ItemStack(Material.IRON_BOOTS);
+        standard3[1] = new ItemStack(Material.IRON_LEGGINGS);
+        standard3[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+        standard3[3] = new ItemStack(Material.LEATHER_HELMET);
+
+        ItemStack[] upgraded = new ItemStack[4];
+        upgraded[0] = new ItemStack(Material.IRON_BOOTS);
+        upgraded[1] = new ItemStack(Material.IRON_LEGGINGS);
+        upgraded[2] = new ItemStack(Material.LEATHER_CHESTPLATE);
+        upgraded[3] = new ItemStack(Material.LEATHER_HELMET);
+
+        ItemStack sharpfakard = new ItemStack(Material.WOOD_SWORD, 1);
+        sharpfakard.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+
+        if (cmd.getName().equalsIgnoreCase("pvp")) {
+            if (args.length == 0) {
+                sender.sendMessage("§7Plugin created by: §ckoba1");
+                sender.sendMessage("");
+                sender.sendMessage("§7Parancsok:");
+                sender.sendMessage("§c/pvp select §7- Kit kiválasztása");
+                sender.sendMessage("§c/heal");
+                sender.sendMessage("§c/sun");
+                sender.sendMessage("§c/day");
+
+            }
+
+            if(args.length == 2) {
+                if (args[0].equalsIgnoreCase("select")) {
+                    if (args[1].equalsIgnoreCase("standard")) {
+                        getConfig().set("Kit." + ".Kit", "Standard");
+                        saveConfig();
+                        sender.sendMessage("§aA §cStandard §akit sikeresen kiválasztva!");
+                    } else if (args[1].equalsIgnoreCase("standard2")) {
+                        getConfig().set("Kit." + ".Kit", "Standard2");
+                        saveConfig();
+                        sender.sendMessage("§aA §cStandard2 §akit sikeresen kiválasztva!");
+                    } else if (args[1].equalsIgnoreCase("standard3")) {
+                        getConfig().set("Kit." + ".Kit", "Standard3");
+                        saveConfig();
+                        sender.sendMessage("§aA §cStandard3 §akit sikeresen kiválasztva!");
+                    } else if (args[1].equalsIgnoreCase("upgraded")) {
+                        getConfig().set("Kit." + ".Kit", "Upgraded");
+                        saveConfig();
+                        sender.sendMessage("§aAz §cUpgraded §akit sikeresen kiválasztva!");
+                    }
+                }
+            } else if(args.length == 1) {
+                sender.sendMessage("§7Kitek:");
+                sender.sendMessage("§cStandard");
+                sender.sendMessage("§cStandard2");
+                sender.sendMessage("§cStandard3");
+                sender.sendMessage("§cUpgraded");
+            }
+        }
+
+        else if (cmd.getName().equalsIgnoreCase("heal")) {
+            ((Player) sender).setHealth(20.0);
+            ((Player) sender).setFoodLevel(20);
+            sender.sendMessage("§aÉleted sikeresen feltöltve!");
+        }
+
+        else if (cmd.getName().equalsIgnoreCase("top")) {
+            if (args.length == 0) {
+
+                int ricsi = getConfig().getInt("Players." + "lv_NightWolf_vl" + ".Kills");
+                int balu = getConfig().getInt("Players." + "kbalu" + ".Kills");
+
+                if (ricsi == balu) {
+                    sender.sendMessage("§6>-< §eLeaderBoard §6>-<");
+                    sender.sendMessage("§e#1 §6lv_NightWolf_vl §7§o(" + ricsi + ")");
+                    sender.sendMessage("§e#1 §6kbalu §7§o(" + balu + ")");
+                } else if (ricsi > balu) {
+                    sender.sendMessage("§6>-< §eLeaderBoard §6>-<");
+                    sender.sendMessage("§e#1 §6lv_NightWolf_vl §7§o(" + ricsi + ")");
+                    sender.sendMessage("§e#2 §6kbalu §7§o(" + balu + ")");
+                } else if (balu > ricsi) {
+                    sender.sendMessage("§6>-< §eLeaderBoard §6>-<");
+                    sender.sendMessage("§e#2 §6kbalu §7§o(" + balu + ")");
+                    sender.sendMessage("§e#1 §6lv_NightWolf_vl §7§o(" + ricsi + ")");
+                }
+            }
+        }
+
+        else if (cmd.getName().equalsIgnoreCase("reset")) {
+            getConfig().set("Players." + "lv_NightWolf_vl" + ".Kills", 0);
+            getConfig().set("Players." + "kbalu" + ".Kills", 0);
+            sender.sendMessage("§aStatisztikák törölve");
+        }
+
+        else if(cmd.getName().equalsIgnoreCase("day")) {
+            p.performCommand("time set 6000");
+            sender.sendMessage("§aIdő beállítva délre");
+        }
+
+        else if(cmd.getName().equalsIgnoreCase("sun")) {
+            p.performCommand("weather clear");
+            sender.sendMessage("§aEső elállítva");
+        }
+
+        return false;
+    }
+
+    @EventHandler
+    public void onChat(AsyncPlayerChatEvent e) {
+        Player p = e.getPlayer();
+
+        String msg = "§f({kills}) §e{name} ▶ §f{msg}";
+
+        String kills = getConfig().getString("Players." + p.getName() + ".Kills");
+
+        e.setFormat(ChatColor.translateAlternateColorCodes('&', msg
+                .replace("{name}", p.getDisplayName())
+                .replace("{msg}", e.getMessage())
+                .replace("{kills}", kills)
+        ));
+
+    }
+}
