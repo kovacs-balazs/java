@@ -1,14 +1,15 @@
-int x = Math.min((-5), 2);
-int y = Math.min(82, 82);
-int z = Math.min(753, 757);
-int maxX = Math.max((-5), 2);
-int maxY = Math.max(82, 82);
-int maxZ = Math.max(753, 757);
+int minX = Math.min(-201, -200);
+int minY = Math.min(61, 63);
+int minZ = Math.min(-15, -17);
+int maxX = Math.max(-201, -200);
+int maxY = Math.max(61, 63);
+int maxZ = Math.max(-15, -17);
 
-for(int xL = x; xL < maxX; xL++) {
-    for (int yL = y; yL < maxY; yL++) {
-        for (int zL = z; zL < maxZ; zL++) {
-
+for(int x = minX; x < maxX; x++) {
+    for (int y = minY; y < maxY; y++) {
+        for (int z = minZ; z < maxZ; z++) {
+            Location loc = new Location(world, x, y, z);
+            loc.getBlock().setType(Material.AIR);
         }
     }
 }
