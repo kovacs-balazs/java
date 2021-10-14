@@ -1,0 +1,6 @@
+int x = Math.min((-5), 2);
+int y = Math.min(82, 82);
+int z = Math.min(753, 757);
+int maxX = Math.max((-5), 2);
+int maxY = Math.max(82, 82);
+int maxZ = Math.max(753, 757);
