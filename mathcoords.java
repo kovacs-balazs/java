@@ -4,3 +4,11 @@ int z = Math.min(753, 757);
 int maxX = Math.max((-5), 2);
 int maxY = Math.max(82, 82);
 int maxZ = Math.max(753, 757);
+
+for(int xL = x; xL < maxX; xL++) {
+    for (int yL = y; yL < maxY; yL++) {
+        for (int zL = z; zL < maxZ; zL++) {
+
+        }
+    }
+}
